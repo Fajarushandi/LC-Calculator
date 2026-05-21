@@ -12,14 +12,22 @@
   margin:0;
   padding:0;
   box-sizing:border-box;
-  font-family:Arial, Helvetica, sans-serif;
   -webkit-tap-highlight-color:transparent;
+  font-family:Arial, Helvetica, sans-serif;
+}
+
+html{
+  overflow-x:hidden;
+}
+
+body{
+  overflow-x:hidden;
 }
 
 body{
   background:
-  radial-gradient(circle at top,#14213d 0%,#020617 60%);
-  color:white;
+  radial-gradient(circle at top,#16294b 0%,#020617 60%);
+  color:#fff;
   min-height:100vh;
   padding:18px;
 }
@@ -32,39 +40,48 @@ body{
 .card{
   background:#081225;
   border:1px solid rgba(255,255,255,.06);
-  border-radius:30px;
+  border-radius:32px;
   padding:22px;
   box-shadow:
-  0 20px 60px rgba(0,0,0,.45),
+  0 25px 60px rgba(0,0,0,.45),
   inset 0 1px 0 rgba(255,255,255,.03);
 }
 
 .badge{
-  display:inline-block;
-  padding:8px 14px;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:9px 15px;
   border-radius:999px;
   background:#172554;
   color:#93c5fd;
   font-size:12px;
-  font-weight:700;
-  margin-bottom:14px;
+  font-weight:800;
+  margin-bottom:16px;
 }
 
 h1{
-  font-size:30px;
-  margin-bottom:8px;
+  font-size:31px;
+  line-height:1.2;
+  margin-bottom:6px;
+}
+
+.desc{
+  color:#64748b;
+  font-size:13px;
+  margin-bottom:10px;
 }
 
 .section{
-  margin-top:24px;
+  margin-top:26px;
 }
 
 .sectionTitle{
   font-size:13px;
   color:#cbd5e1;
-  margin-bottom:12px;
   font-weight:800;
-  letter-spacing:.5px;
+  letter-spacing:.6px;
+  margin-bottom:13px;
 }
 
 .grid{
@@ -89,11 +106,11 @@ h1{
   width:100%;
   border:none;
   outline:none;
+  border-radius:20px;
+  padding:18px;
   background:#020617;
   border:1px solid #1e293b;
-  color:white;
-  border-radius:18px;
-  padding:17px;
+  color:#fff;
   font-size:16px;
   transition:.2s;
 }
@@ -111,22 +128,27 @@ h1{
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:14px;
-  margin-top:28px;
+  margin-top:30px;
 }
 
 button{
   border:none;
-  padding:17px;
-  border-radius:18px;
+  padding:18px;
+  border-radius:20px;
   font-size:16px;
   font-weight:800;
   cursor:pointer;
+  transition:.15s;
+}
+
+button:active{
+  transform:scale(.98);
 }
 
 .primary{
   background:linear-gradient(135deg,#2563eb,#3b82f6);
   color:white;
-  box-shadow:0 10px 30px rgba(37,99,235,.35);
+  box-shadow:0 12px 30px rgba(37,99,235,.35);
 }
 
 .secondary{
@@ -136,27 +158,28 @@ button{
 
 .result{
   display:none;
-  margin-top:24px;
-  border-radius:24px;
+  margin-top:26px;
+  border-radius:26px;
   overflow:hidden;
   background:#020617;
   border:1px solid #1e293b;
 }
 
 .resultTop{
-  padding:20px;
-  background:linear-gradient(135deg,#0f172a,#111827);
+  padding:22px;
+  background:
+  linear-gradient(135deg,#0f172a,#111827);
   border-bottom:1px solid #1e293b;
 }
 
 .resultTitle{
-  font-size:22px;
+  font-size:23px;
   font-weight:800;
 }
 
 .resultTime{
   color:#93c5fd;
-  margin-top:6px;
+  margin-top:7px;
   font-size:14px;
 }
 
@@ -174,8 +197,8 @@ button{
 .statCard{
   background:#0f172a;
   border:1px solid #1e293b;
-  border-radius:18px;
-  padding:16px;
+  border-radius:20px;
+  padding:17px;
 }
 
 .statLabel{
@@ -192,10 +215,10 @@ button{
 .summary{
   background:#0f172a;
   border:1px solid #1e293b;
-  border-radius:18px;
+  border-radius:20px;
   padding:18px;
   white-space:pre-line;
-  line-height:1.8;
+  line-height:1.9;
   margin-bottom:18px;
 }
 
@@ -207,17 +230,18 @@ button{
   outline:none;
   background:#0f172a;
   border:1px solid #1e293b;
-  border-radius:18px;
+  border-radius:20px;
   padding:16px;
   color:white;
-  line-height:1.7;
   font-size:14px;
+  line-height:1.8;
 }
 
 .copyBtn{
   width:100%;
   margin-top:14px;
-  background:linear-gradient(135deg,#16a34a,#22c55e);
+  background:
+  linear-gradient(135deg,#16a34a,#22c55e);
   color:white;
 }
 
@@ -226,6 +250,14 @@ button{
   margin-top:12px;
   color:#86efac;
   font-size:13px;
+  font-weight:700;
+}
+
+.credit{
+  margin-top:22px;
+  text-align:center;
+  color:#475569;
+  font-size:12px;
   font-weight:700;
 }
 
@@ -248,9 +280,15 @@ button{
 
 <div class="card">
 
-<div class="badge">LINEAGE CLASSIC</div>
+<div class="badge">
+LINEAGE CLASSIC
+</div>
 
 <h1>EXP & Adena Calculator</h1>
+
+<div class="desc">
+Made by Fajar
+</div>
 
 <div class="section">
 
@@ -371,14 +409,20 @@ Reset
 <div class="stats">
 
 <div class="statCard">
-<div class="statLabel">EXP Gain</div>
+<div class="statLabel">
+EXP Gain
+</div>
+
 <div class="statValue" id="expGain">
 +0.0000%
 </div>
 </div>
 
 <div class="statCard">
-<div class="statLabel">EXP / Jam</div>
+<div class="statLabel">
+EXP / Jam
+</div>
+
 <div class="statValue" id="expHour">
 0.0000%
 </div>
@@ -394,7 +438,9 @@ id="copyText"
 readonly
 ></textarea>
 
-<button class="copyBtn" onclick="copyResult()">
+<button
+class="copyBtn"
+onclick="copyResult()">
 Copy Hasil
 </button>
 
@@ -437,91 +483,149 @@ function formatMoney(num){
 
 function getHours(start,end){
 
-  const [sh,sm] = start.split(':').map(Number);
-  const [eh,em] = end.split(':').map(Number);
+  const [sh,sm] =
+  start.split(':').map(Number);
 
-  let startMin = sh * 60 + sm;
-  let endMin = eh * 60 + em;
+  const [eh,em] =
+  end.split(':').map(Number);
+
+  let startMin =
+  sh * 60 + sm;
+
+  let endMin =
+  eh * 60 + em;
 
   if(endMin < startMin){
+
     endMin += 24 * 60;
+
   }
 
-  return (endMin - startMin) / 60;
+  return (
+    endMin - startMin
+  ) / 60;
 
 }
 
-document.querySelectorAll('.money').forEach(input=>{
+document
+.querySelectorAll('.money')
+.forEach(input=>{
 
-  input.addEventListener('input',()=>{
+  input.addEventListener(
+    'input',
+    ()=>{
 
-    let value = input.value
-    .replace(/,/g,'')
-    .replace(/\D/g,'');
+      let value =
+      input.value
+      .replace(/,/g,'')
+      .replace(/\D/g,'');
 
-    if(value === ''){
-      input.value = '';
-      return;
+      if(value === ''){
+
+        input.value = '';
+        return;
+
+      }
+
+      input.value =
+      Number(value)
+      .toLocaleString('en-US');
+
     }
-
-    input.value =
-    Number(value).toLocaleString('en-US');
-
-  });
+  );
 
 });
 
 function calculate(){
 
   const charName =
-  document.getElementById('charName').value || '-';
+  document
+  .getElementById('charName')
+  .value || '-';
 
   const level =
-  document.getElementById('level').value || '-';
+  document
+  .getElementById('level')
+  .value || '-';
 
   const startTime =
-  document.getElementById('startTime').value;
+  document
+  .getElementById('startTime')
+  .value;
 
   const endTime =
-  document.getElementById('endTime').value;
+  document
+  .getElementById('endTime')
+  .value;
 
   const startExp =
   cleanNumber(
-    document.getElementById('startExp').value
+    document
+    .getElementById('startExp')
+    .value
   );
 
   const endExp =
   cleanNumber(
-    document.getElementById('endExp').value
+    document
+    .getElementById('endExp')
+    .value
   );
 
   const startAdena =
   cleanNumber(
-    document.getElementById('startAdena').value
+    document
+    .getElementById('startAdena')
+    .value
   );
 
   const endAdena =
   cleanNumber(
-    document.getElementById('endAdena').value
+    document
+    .getElementById('endAdena')
+    .value
   );
 
-  if(isNaN(startExp) || isNaN(endExp)){
-    alert('Isi EXP terlebih dahulu');
+  if(
+    isNaN(startExp) ||
+    isNaN(endExp)
+  ){
+
+    alert(
+      'Isi EXP terlebih dahulu'
+    );
+
     return;
+
   }
 
-  if(isNaN(startAdena) || isNaN(endAdena)){
-    alert('Isi Adena terlebih dahulu');
+  if(
+    isNaN(startAdena) ||
+    isNaN(endAdena)
+  ){
+
+    alert(
+      'Isi Adena terlebih dahulu'
+    );
+
     return;
+
   }
 
-  const hours = getHours(startTime,endTime);
+  const hours =
+  getHours(
+    startTime,
+    endTime
+  );
 
-  const expGain = endExp - startExp;
+  const expGain =
+  endExp - startExp;
 
-  const expPerHour = expGain / hours;
+  const expPerHour =
+  expGain / hours;
 
-  const adenaGain = endAdena - startAdena;
+  const adenaGain =
+  endAdena - startAdena;
 
   finalText =
 `${charName} (${startTime} - ${endTime})
@@ -533,22 +637,32 @@ Exp ${formatExp(expGain)}%
 Exp/jam ${formatExp(expPerHour)}%
 Adena +${formatMoney(adenaGain)}`;
 
-  document.getElementById('copyText').value =
-  finalText;
+  document
+  .getElementById('copyText')
+  .value = finalText;
 
-  document.getElementById('resName').innerText =
-  charName;
+  document
+  .getElementById('resName')
+  .innerText = charName;
 
-  document.getElementById('resTime').innerText =
+  document
+  .getElementById('resTime')
+  .innerText =
   `${startTime} - ${endTime} • ${hours} Jam`;
 
-  document.getElementById('expGain').innerText =
+  document
+  .getElementById('expGain')
+  .innerText =
   `+${formatExp(expGain)}%`;
 
-  document.getElementById('expHour').innerText =
+  document
+  .getElementById('expHour')
+  .innerText =
   `${formatExp(expPerHour)}%`;
 
-  document.getElementById('summary').innerHTML =
+  document
+  .getElementById('summary')
+  .innerHTML =
 `━━━━━━━━━━━━━━
 Lv ${level}
 Exp ${formatExp(endExp)}%
@@ -560,8 +674,9 @@ Exp Gain : +${formatExp(expGain)}%
 Exp/Jam  : ${formatExp(expPerHour)}%
 Adena    : +${formatMoney(adenaGain)}`;
 
-  document.getElementById('result').style.display =
-  'block';
+  document
+  .getElementById('result')
+  .style.display = 'block';
 
 }
 
@@ -573,7 +688,9 @@ async function copyResult(){
 
   try{
 
-    await navigator.clipboard.writeText(finalText);
+    await navigator
+    .clipboard
+    .writeText(finalText);
 
   }catch{
 
@@ -581,13 +698,16 @@ async function copyResult(){
 
   }
 
-  document.getElementById('status').innerText =
+  document
+  .getElementById('status')
+  .innerText =
   'Berhasil dicopy ✓';
 
   setTimeout(()=>{
 
-    document.getElementById('status').innerText =
-    '';
+    document
+    .getElementById('status')
+    .innerText = '';
 
   },1500);
 
@@ -595,18 +715,25 @@ async function copyResult(){
 
 function resetAll(){
 
-  document.querySelectorAll('input').forEach(input=>{
+  document
+  .querySelectorAll('input')
+  .forEach(input=>{
 
     input.value = '';
 
   });
 
-  document.getElementById('result').style.display =
-  'none';
+  document
+  .getElementById('result')
+  .style.display = 'none';
 
-  document.getElementById('copyText').value = '';
+  document
+  .getElementById('copyText')
+  .value = '';
 
-  document.getElementById('summary').innerHTML = '';
+  document
+  .getElementById('summary')
+  .innerHTML = '';
 
   finalText = '';
 
