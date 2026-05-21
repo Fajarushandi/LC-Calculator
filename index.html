@@ -410,13 +410,13 @@ function getHours(start,end){
   let startMin = sh * 60 + sm;
   let endMin = eh * 60 + em;
 
-  if(endMin < startMin){
+  if(endMin <= startMin){
     endMin += 24 * 60;
   }
 
   const diff = (endMin - startMin) / 60;
 
-  if(diff <= 0) return NaN;
+  if(diff <= 0 || diff > 24) return NaN;
 
   return diff;
 }
@@ -458,8 +458,10 @@ document.querySelectorAll('.expInput').forEach(input=>{
 });
 
 function calculate(){
+  $('status').innerText = '';
+
   const charName = $('charName').value.trim() || '-';
-  const level = $('level').value.trim() || '-';
+  const level = $('level').value.trim();
   const startTime = $('startTime').value;
   const endTime = $('endTime').value;
 
@@ -467,6 +469,12 @@ function calculate(){
   const endExp = cleanNumber($('endExp').value);
   const startAdena = cleanNumber($('startAdena').value);
   const endAdena = cleanNumber($('endAdena').value);
+
+  if(level === ''){
+    alert('Isi level terlebih dahulu');
+    $('level').focus();
+    return;
+  }
 
   if(!startTime || !endTime){
     alert('Isi jam mulai & jam selesai');
@@ -478,6 +486,11 @@ function calculate(){
     return;
   }
 
+  if(startExp < 0 || startExp > 100 || endExp < 0 || endExp > 100){
+    alert('EXP harus antara 0 sampai 100');
+    return;
+  }
+
   if(isNaN(startAdena) || isNaN(endAdena)){
     alert('Isi Adena awal & Adena akhir');
     return;
@@ -486,7 +499,7 @@ function calculate(){
   const hours = getHours(startTime,endTime);
 
   if(!Number.isFinite(hours)){
-    alert('Jam mulai dan jam selesai tidak boleh sama');
+    alert('Format jam tidak valid');
     return;
   }
 
@@ -500,15 +513,15 @@ Lv ${level}
 Exp ${formatExp(endExp)}%
 Adena ${formatMoney(endAdena)}
 
-Exp ${formatExp(expGain)}%
-Exp/jam ${formatExp(expPerHour)}%
+Exp ${formatSignedExp(expGain)}
+Exp/jam ${formatSignedExp(expPerHour)}
 Adena ${formatSignedMoney(adenaGain)}`;
 
   $('copyText').value = finalText;
   $('resName').innerText = charName;
   $('resTime').innerText = `${startTime} - ${endTime} • ${formatHours(hours)}`;
   $('expGain').innerText = formatSignedExp(expGain);
-  $('expHour').innerText = `${formatExp(expPerHour)}%`;
+  $('expHour').innerText = formatSignedExp(expPerHour);
 
   $('result').style.display = 'block';
 
