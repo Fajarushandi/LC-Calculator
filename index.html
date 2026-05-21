@@ -7,7 +7,6 @@
 <title>Lineage Farming Calculator</title>
 
 <style>
-
 *{
   margin:0;
   padding:0;
@@ -22,35 +21,32 @@ html{
 
 body{
   overflow-x:hidden;
-}
-
-body{
   background:
-  radial-gradient(circle at top,#16294b 0%,#020617 60%);
+    radial-gradient(circle at top,#16294b 0%,#020617 62%);
   color:#fff;
   min-height:100vh;
   padding:18px;
 }
 
 .app{
+  width:100%;
   max-width:560px;
-  margin:auto;
+  margin:0 auto;
 }
 
 .card{
+  width:100%;
   background:#081225;
-  border:1px solid rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.07);
   border-radius:32px;
   padding:22px;
   box-shadow:
-  0 25px 60px rgba(0,0,0,.45),
-  inset 0 1px 0 rgba(255,255,255,.03);
+    0 25px 60px rgba(0,0,0,.45),
+    inset 0 1px 0 rgba(255,255,255,.04);
 }
 
 .badge{
   display:inline-flex;
-  align-items:center;
-  gap:8px;
   padding:9px 15px;
   border-radius:999px;
   background:#172554;
@@ -62,14 +58,14 @@ body{
 
 h1{
   font-size:31px;
-  line-height:1.2;
+  line-height:1.18;
   margin-bottom:6px;
 }
 
 .desc{
   color:#64748b;
   font-size:13px;
-  margin-bottom:10px;
+  font-weight:700;
 }
 
 .section{
@@ -113,10 +109,6 @@ h1{
   color:#fff;
   font-size:16px;
   transition:.2s;
-}
-
-.input::placeholder{
-  color:#334155;
 }
 
 .input:focus{
@@ -167,8 +159,7 @@ button:active{
 
 .resultTop{
   padding:22px;
-  background:
-  linear-gradient(135deg,#0f172a,#111827);
+  background:linear-gradient(135deg,#0f172a,#111827);
   border-bottom:1px solid #1e293b;
 }
 
@@ -210,21 +201,12 @@ button:active{
 .statValue{
   font-size:20px;
   font-weight:800;
-}
-
-.summary{
-  background:#0f172a;
-  border:1px solid #1e293b;
-  border-radius:20px;
-  padding:18px;
-  white-space:pre-line;
-  line-height:1.9;
-  margin-bottom:18px;
+  word-break:break-word;
 }
 
 .copyArea{
   width:100%;
-  min-height:180px;
+  min-height:185px;
   resize:none;
   border:none;
   outline:none;
@@ -240,12 +222,12 @@ button:active{
 .copyBtn{
   width:100%;
   margin-top:14px;
-  background:
-  linear-gradient(135deg,#16a34a,#22c55e);
+  background:linear-gradient(135deg,#16a34a,#22c55e);
   color:white;
 }
 
 .status{
+  min-height:18px;
   text-align:center;
   margin-top:12px;
   color:#86efac;
@@ -253,379 +235,264 @@ button:active{
   font-weight:700;
 }
 
-.credit{
-  margin-top:22px;
-  text-align:center;
-  color:#475569;
-  font-size:12px;
-  font-weight:700;
-}
-
 @media(max-width:500px){
-
   .grid,
   .stats,
   .btns{
     grid-template-columns:1fr;
   }
 
-}
+  body{
+    padding:14px;
+  }
 
+  .card{
+    padding:20px;
+    border-radius:28px;
+  }
+
+  h1{
+    font-size:28px;
+  }
+}
 </style>
 </head>
 
 <body>
 
 <div class="app">
+  <div class="card">
 
-<div class="card">
+    <div class="badge">LINEAGE CLASSIC</div>
 
-<div class="badge">
-LINEAGE CLASSIC
-</div>
+    <h1>EXP & Adena Calculator</h1>
+    <div class="desc">Made by Fajar</div>
 
-<h1>EXP & Adena Calculator</h1>
+    <div class="section">
+      <div class="sectionTitle">CHARACTER</div>
 
-<div class="desc">
-Made by Fajar
-</div>
+      <div class="grid">
+        <div class="inputBox">
+          <div class="label">Character</div>
+          <input class="input" id="charName" autocomplete="off">
+        </div>
 
-<div class="section">
+        <div class="inputBox">
+          <div class="label">Level</div>
+          <input class="input" id="level" type="number" inputmode="numeric">
+        </div>
+      </div>
+    </div>
 
-<div class="sectionTitle">
-CHARACTER
-</div>
+    <div class="section">
+      <div class="sectionTitle">TIME</div>
 
-<div class="grid">
+      <div class="grid">
+        <div class="inputBox">
+          <div class="label">Jam Mulai</div>
+          <input class="input" id="startTime" type="time">
+        </div>
 
-<div class="inputBox">
-<div class="label">Character</div>
-<input class="input" id="charName">
-</div>
+        <div class="inputBox">
+          <div class="label">Jam Selesai</div>
+          <input class="input" id="endTime" type="time">
+        </div>
+      </div>
+    </div>
 
-<div class="inputBox">
-<div class="label">Level</div>
-<input class="input" id="level" type="number">
-</div>
+    <div class="section">
+      <div class="sectionTitle">EXP</div>
 
-</div>
+      <div class="grid">
+        <div class="inputBox">
+          <div class="label">EXP Awal</div>
+          <input class="input expInput" id="startExp" inputmode="decimal" autocomplete="off">
+        </div>
 
-</div>
+        <div class="inputBox">
+          <div class="label">EXP Akhir</div>
+          <input class="input expInput" id="endExp" inputmode="decimal" autocomplete="off">
+        </div>
+      </div>
+    </div>
 
-<div class="section">
+    <div class="section">
+      <div class="sectionTitle">ADENA</div>
 
-<div class="sectionTitle">
-TIME
-</div>
+      <div class="grid">
+        <div class="inputBox">
+          <div class="label">Adena Awal</div>
+          <input class="input money" id="startAdena" inputmode="numeric" autocomplete="off">
+        </div>
 
-<div class="grid">
+        <div class="inputBox">
+          <div class="label">Adena Akhir</div>
+          <input class="input money" id="endAdena" inputmode="numeric" autocomplete="off">
+        </div>
+      </div>
+    </div>
 
-<div class="inputBox">
-<div class="label">Jam Mulai</div>
-<input class="input" id="startTime" type="time">
-</div>
+    <div class="btns">
+      <button class="primary" onclick="calculate()">Hitung Sekarang</button>
+      <button class="secondary" onclick="resetAll()">Reset</button>
+    </div>
 
-<div class="inputBox">
-<div class="label">Jam Selesai</div>
-<input class="input" id="endTime" type="time">
-</div>
+    <div class="result" id="result">
+      <div class="resultTop">
+        <div class="resultTitle" id="resName">-</div>
+        <div class="resultTime" id="resTime">-</div>
+      </div>
 
-</div>
+      <div class="resultBody">
+        <div class="stats">
+          <div class="statCard">
+            <div class="statLabel">EXP Gain</div>
+            <div class="statValue" id="expGain">0.0000%</div>
+          </div>
 
-</div>
+          <div class="statCard">
+            <div class="statLabel">EXP / Jam</div>
+            <div class="statValue" id="expHour">0.0000%</div>
+          </div>
+        </div>
 
-<div class="section">
+        <textarea class="copyArea" id="copyText" readonly></textarea>
 
-<div class="sectionTitle">
-EXP
-</div>
+        <button class="copyBtn" onclick="copyResult()">Copy Hasil</button>
 
-<div class="grid">
+        <div class="status" id="status"></div>
+      </div>
+    </div>
 
-<div class="inputBox">
-<div class="label">EXP Awal</div>
-<input class="input" id="startExp">
-</div>
-
-<div class="inputBox">
-<div class="label">EXP Akhir</div>
-<input class="input" id="endExp">
-</div>
-
-</div>
-
-</div>
-
-<div class="section">
-
-<div class="sectionTitle">
-ADENA
-</div>
-
-<div class="grid">
-
-<div class="inputBox">
-<div class="label">Adena Awal</div>
-<input class="input money" id="startAdena">
-</div>
-
-<div class="inputBox">
-<div class="label">Adena Akhir</div>
-<input class="input money" id="endAdena">
-</div>
-
-</div>
-
-</div>
-
-<div class="btns">
-
-<button class="primary" onclick="calculate()">
-Hitung Sekarang
-</button>
-
-<button class="secondary" onclick="resetAll()">
-Reset
-</button>
-
-</div>
-
-<div class="result" id="result">
-
-<div class="resultTop">
-
-<div class="resultTitle" id="resName">
--
-</div>
-
-<div class="resultTime" id="resTime">
--
-</div>
-
-</div>
-
-<div class="resultBody">
-
-<div class="stats">
-
-<div class="statCard">
-<div class="statLabel">
-EXP Gain
-</div>
-
-<div class="statValue" id="expGain">
-+0.0000%
-</div>
-</div>
-
-<div class="statCard">
-<div class="statLabel">
-EXP / Jam
-</div>
-
-<div class="statValue" id="expHour">
-0.0000%
-</div>
-</div>
-
-</div>
-
-<div class="summary" id="summary"></div>
-
-<textarea
-class="copyArea"
-id="copyText"
-readonly
-></textarea>
-
-<button
-class="copyBtn"
-onclick="copyResult()">
-Copy Hasil
-</button>
-
-<div class="status" id="status"></div>
-
-</div>
-
-</div>
-
-</div>
-
+  </div>
 </div>
 
 <script>
-
 let finalText = '';
 
+const $ = id => document.getElementById(id);
+
 function cleanNumber(value){
-
-  return Number(
-    String(value)
+  const cleaned = String(value || '')
     .replace(/,/g,'')
-    .trim()
-  );
+    .replace(/\s/g,'')
+    .trim();
 
+  if(cleaned === '') return NaN;
+
+  return Number(cleaned);
 }
 
 function formatExp(num){
-
   return Number(num).toFixed(4);
-
 }
 
 function formatMoney(num){
+  return Math.round(num).toLocaleString('en-US');
+}
 
-  return Math.round(num)
-  .toLocaleString('en-US');
+function formatSignedMoney(num){
+  const sign = num >= 0 ? '+' : '-';
+  return sign + formatMoney(Math.abs(num));
+}
 
+function formatSignedExp(num){
+  const sign = num >= 0 ? '+' : '-';
+  return sign + formatExp(Math.abs(num)) + '%';
 }
 
 function getHours(start,end){
+  if(!start || !end) return NaN;
 
-  const [sh,sm] =
-  start.split(':').map(Number);
+  const [sh,sm] = start.split(':').map(Number);
+  const [eh,em] = end.split(':').map(Number);
 
-  const [eh,em] =
-  end.split(':').map(Number);
-
-  let startMin =
-  sh * 60 + sm;
-
-  let endMin =
-  eh * 60 + em;
+  let startMin = sh * 60 + sm;
+  let endMin = eh * 60 + em;
 
   if(endMin < startMin){
-
     endMin += 24 * 60;
-
   }
 
-  return (
-    endMin - startMin
-  ) / 60;
+  const diff = (endMin - startMin) / 60;
 
+  if(diff <= 0) return NaN;
+
+  return diff;
 }
 
-document
-.querySelectorAll('.money')
-.forEach(input=>{
+function formatHours(hours){
+  if(!Number.isFinite(hours)) return '-';
 
-  input.addEventListener(
-    'input',
-    ()=>{
+  const h = Math.floor(hours);
+  const m = Math.round((hours - h) * 60);
 
-      let value =
-      input.value
+  if(m === 0) return `${h} Jam`;
+  if(h === 0) return `${m} Menit`;
+
+  return `${h} Jam ${m} Menit`;
+}
+
+document.querySelectorAll('.money').forEach(input=>{
+  input.addEventListener('input',()=>{
+    let value = input.value
       .replace(/,/g,'')
       .replace(/\D/g,'');
 
-      if(value === ''){
-
-        input.value = '';
-        return;
-
-      }
-
-      input.value =
-      Number(value)
-      .toLocaleString('en-US');
-
+    if(value === ''){
+      input.value = '';
+      return;
     }
-  );
 
+    input.value = Number(value).toLocaleString('en-US');
+  });
+});
+
+document.querySelectorAll('.expInput').forEach(input=>{
+  input.addEventListener('input',()=>{
+    input.value = input.value
+      .replace(/,/g,'.')
+      .replace(/[^\d.]/g,'')
+      .replace(/(\..*)\./g,'$1');
+  });
 });
 
 function calculate(){
+  const charName = $('charName').value.trim() || '-';
+  const level = $('level').value.trim() || '-';
+  const startTime = $('startTime').value;
+  const endTime = $('endTime').value;
 
-  const charName =
-  document
-  .getElementById('charName')
-  .value || '-';
+  const startExp = cleanNumber($('startExp').value);
+  const endExp = cleanNumber($('endExp').value);
+  const startAdena = cleanNumber($('startAdena').value);
+  const endAdena = cleanNumber($('endAdena').value);
 
-  const level =
-  document
-  .getElementById('level')
-  .value || '-';
-
-  const startTime =
-  document
-  .getElementById('startTime')
-  .value;
-
-  const endTime =
-  document
-  .getElementById('endTime')
-  .value;
-
-  const startExp =
-  cleanNumber(
-    document
-    .getElementById('startExp')
-    .value
-  );
-
-  const endExp =
-  cleanNumber(
-    document
-    .getElementById('endExp')
-    .value
-  );
-
-  const startAdena =
-  cleanNumber(
-    document
-    .getElementById('startAdena')
-    .value
-  );
-
-  const endAdena =
-  cleanNumber(
-    document
-    .getElementById('endAdena')
-    .value
-  );
-
-  if(
-    isNaN(startExp) ||
-    isNaN(endExp)
-  ){
-
-    alert(
-      'Isi EXP terlebih dahulu'
-    );
-
+  if(!startTime || !endTime){
+    alert('Isi jam mulai & jam selesai');
     return;
-
   }
 
-  if(
-    isNaN(startAdena) ||
-    isNaN(endAdena)
-  ){
-
-    alert(
-      'Isi Adena terlebih dahulu'
-    );
-
+  if(isNaN(startExp) || isNaN(endExp)){
+    alert('Isi EXP awal & EXP akhir');
     return;
-
   }
 
-  const hours =
-  getHours(
-    startTime,
-    endTime
-  );
+  if(isNaN(startAdena) || isNaN(endAdena)){
+    alert('Isi Adena awal & Adena akhir');
+    return;
+  }
 
-  const expGain =
-  endExp - startExp;
+  const hours = getHours(startTime,endTime);
 
-  const expPerHour =
-  expGain / hours;
+  if(!Number.isFinite(hours)){
+    alert('Jam mulai dan jam selesai tidak boleh sama');
+    return;
+  }
 
-  const adenaGain =
-  endAdena - startAdena;
+  const expGain = endExp - startExp;
+  const expPerHour = expGain / hours;
+  const adenaGain = endAdena - startAdena;
 
   finalText =
 `${charName} (${startTime} - ${endTime})
@@ -635,110 +502,57 @@ Adena ${formatMoney(endAdena)}
 
 Exp ${formatExp(expGain)}%
 Exp/jam ${formatExp(expPerHour)}%
-Adena +${formatMoney(adenaGain)}`;
+Adena ${formatSignedMoney(adenaGain)}`;
 
-  document
-  .getElementById('copyText')
-  .value = finalText;
+  $('copyText').value = finalText;
+  $('resName').innerText = charName;
+  $('resTime').innerText = `${startTime} - ${endTime} • ${formatHours(hours)}`;
+  $('expGain').innerText = formatSignedExp(expGain);
+  $('expHour').innerText = `${formatExp(expPerHour)}%`;
 
-  document
-  .getElementById('resName')
-  .innerText = charName;
+  $('result').style.display = 'block';
 
-  document
-  .getElementById('resTime')
-  .innerText =
-  `${startTime} - ${endTime} • ${hours} Jam`;
-
-  document
-  .getElementById('expGain')
-  .innerText =
-  `+${formatExp(expGain)}%`;
-
-  document
-  .getElementById('expHour')
-  .innerText =
-  `${formatExp(expPerHour)}%`;
-
-  document
-  .getElementById('summary')
-  .innerHTML =
-`━━━━━━━━━━━━━━
-Lv ${level}
-Exp ${formatExp(endExp)}%
-Adena ${formatMoney(endAdena)}
-
-━━━━━━━━━━━━━━
-
-Exp Gain : +${formatExp(expGain)}%
-Exp/Jam  : ${formatExp(expPerHour)}%
-Adena    : +${formatMoney(adenaGain)}`;
-
-  document
-  .getElementById('result')
-  .style.display = 'block';
-
+  setTimeout(()=>{
+    $('result').scrollIntoView({
+      behavior:'smooth',
+      block:'start'
+    });
+  },80);
 }
 
 async function copyResult(){
-
   if(!finalText){
+    alert('Belum ada hasil');
     return;
   }
 
   try{
-
-    await navigator
-    .clipboard
-    .writeText(finalText);
-
+    await navigator.clipboard.writeText(finalText);
   }catch{
-
+    const textArea = $('copyText');
+    textArea.focus();
+    textArea.select();
     document.execCommand('copy');
-
   }
 
-  document
-  .getElementById('status')
-  .innerText =
-  'Berhasil dicopy ✓';
+  $('status').innerText = 'Berhasil dicopy ✓';
 
   setTimeout(()=>{
-
-    document
-    .getElementById('status')
-    .innerText = '';
-
+    $('status').innerText = '';
   },1500);
-
 }
 
 function resetAll(){
-
-  document
-  .querySelectorAll('input')
-  .forEach(input=>{
-
+  document.querySelectorAll('input').forEach(input=>{
     input.value = '';
-
   });
-
-  document
-  .getElementById('result')
-  .style.display = 'none';
-
-  document
-  .getElementById('copyText')
-  .value = '';
-
-  document
-  .getElementById('summary')
-  .innerHTML = '';
 
   finalText = '';
 
+  $('result').style.display = 'none';
+  $('copyText').value = '';
+  $('status').innerText = '';
 }
-
 </script>
 
 </body>
