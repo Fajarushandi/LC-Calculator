@@ -235,6 +235,37 @@ button:active{
   font-weight:700;
 }
 
+
+.miniSection{
+  margin-top:16px;
+}
+
+.toggleBox{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  background:#020617;
+  border:1px solid #1e293b;
+  border-radius:18px;
+  padding:14px 16px;
+  color:#e2e8f0;
+  font-size:14px;
+  font-weight:800;
+}
+
+.toggleBox input{
+  width:18px;
+  height:18px;
+  accent-color:#3b82f6;
+}
+
+.hint{
+  margin-top:8px;
+  color:#64748b;
+  font-size:12px;
+  line-height:1.5;
+}
+
 @media(max-width:500px){
   .grid,
   .stats,
@@ -314,6 +345,13 @@ button:active{
           <input class="input expInput" id="endExp" inputmode="decimal" autocomplete="off">
         </div>
       </div>
+    </div>
+    <div class="section miniSection">
+      <label class="toggleBox">
+        <input type="checkbox" id="forceLevelUp">
+        <span>Paksa Level Up +1</span>
+      </label>
+      <div class="hint">Kosongkan kalau normal. Sistem tetap auto level up kalau EXP akhir lebih kecil dari EXP awal.</div>
     </div>
 
     <div class="section">
@@ -511,11 +549,15 @@ function calculate(){
     return;
   }
 
-  // Auto level-up:
-  // Kalau EXP akhir lebih kecil dari EXP awal, sistem anggap naik 1 level.
-  // Contoh: Lv 39 98% -> Lv 40 3% = +5.0000%.
-  const isLevelUp = endExp < startExp;
-  const expGain = isLevelUp ? (100 - startExp) + endExp : endExp - startExp;
+  // Auto level-up aman:
+  // 1) Kalau EXP akhir lebih kecil dari EXP awal, otomatis dianggap naik 1 level.
+  // 2) Kalau checkbox dipencet, tetap dipaksa naik 1 level walau EXP akhir lebih besar.
+  // Contoh: Lv 10 98% -> Lv 11 5% = +7.0000%, bukan -93.0000%.
+  const forceLevelUp = $('forceLevelUp')?.checked === true;
+  const isLevelUp = forceLevelUp || endExp < startExp;
+  const expGain = isLevelUp
+    ? (100 - startExp) + endExp
+    : endExp - startExp;
   const levelText = isLevelUp ? `Lv ${level} → ${level + 1}` : `Lv ${level}`;
   const expPerHour = expGain / hours;
   const adenaGain = endAdena - startAdena;
@@ -578,6 +620,8 @@ function resetAll(){
   $('result').style.display = 'none';
   $('copyText').value = '';
   $('status').innerText = '';
+  const forceLevelUp = $('forceLevelUp');
+  if(forceLevelUp) forceLevelUp.checked = false;
 }
 </script>
 
