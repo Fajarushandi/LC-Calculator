@@ -279,7 +279,7 @@ button:active{
 
         <div class="inputBox">
           <div class="label">Level</div>
-          <input class="input" id="level" type="number" inputmode="numeric">
+          <input class="input" id="level" type="number" inputmode="numeric" min="1" autocomplete="off">
         </div>
       </div>
     </div>
@@ -461,7 +461,7 @@ function calculate(){
   $('status').innerText = '';
 
   const charName = $('charName').value.trim() || '-';
-  const level = $('level').value.trim();
+  const levelRaw = $('level').value.trim();
   const startTime = $('startTime').value;
   const endTime = $('endTime').value;
 
@@ -470,8 +470,16 @@ function calculate(){
   const startAdena = cleanNumber($('startAdena').value);
   const endAdena = cleanNumber($('endAdena').value);
 
-  if(level === ''){
+  if(levelRaw === ''){
     alert('Isi level terlebih dahulu');
+    $('level').focus();
+    return;
+  }
+
+  const level = Number(levelRaw);
+
+  if(!Number.isInteger(level) || level < 1){
+    alert('Level harus angka valid');
     $('level').focus();
     return;
   }
@@ -503,13 +511,18 @@ function calculate(){
     return;
   }
 
-  const expGain = endExp - startExp;
+  // Auto level-up:
+  // Kalau EXP akhir lebih kecil dari EXP awal, sistem anggap naik 1 level.
+  // Contoh: Lv 39 98% -> Lv 40 3% = +5.0000%.
+  const isLevelUp = endExp < startExp;
+  const expGain = isLevelUp ? (100 - startExp) + endExp : endExp - startExp;
+  const levelText = isLevelUp ? `Lv ${level} → ${level + 1}` : `Lv ${level}`;
   const expPerHour = expGain / hours;
   const adenaGain = endAdena - startAdena;
 
   finalText =
 `${charName} (${startTime} - ${endTime})
-Lv ${level}
+${levelText}
 Exp ${formatExp(endExp)}%
 Adena ${formatMoney(endAdena)}
 
