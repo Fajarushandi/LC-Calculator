@@ -173,25 +173,26 @@ function calculate(){
     const adenaGain = endAdena - startAdena;
     const levelText = isLevelUp ? `Lv ${level} → ${level+1}` : `Lv ${level}`;
 
+    // Format copy text sesuai permintaan fix double %
     finalText = `${charName} (${startTime} - ${endTime})
 ${levelText}
-Exp    : ${formatExp(endExp)}%
-Adena  : ${formatMoney(endAdena)}`;
+Exp ${formatExp(endExp)}%
+Adena ${formatMoney(endAdena)}`;
 
     if(includeStart){
         finalText += `
 
 Started with:
-    Exp   : ${formatExp(startExp)}%
-    Adena : ${formatMoney(startAdena)}`;
+Exp ${formatExp(startExp)}%
+Adena ${formatMoney(startAdena)}`;
     }
 
     finalText += `
 
 Gain:
-    Exp     : ${formatSignedExp(expGain)}
-    Exp/jam : ${formatSignedExp(expPerHour)}
-    Adena   : ${formatSignedMoney(adenaGain)}`;
+Exp ${formatSignedExp(expGain)}
+Exp/jam ${formatSignedExp(expPerHour)}
+Adena ${formatSignedMoney(adenaGain)}`;
 
     $('copyText').value = finalText;
     $('resName').innerText = charName;
@@ -224,6 +225,5 @@ function resetAll(){
     if($('includeStart')) $('includeStart').checked=false;
 }
 </script>
-
 </body>
 </html>
