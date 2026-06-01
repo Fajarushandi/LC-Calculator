@@ -151,8 +151,8 @@ function calculate(){
     const endTime = $('endTime').value;
     const startExp = cleanNumber($('startExp').value.replace(/,/g,''));
     const endExp = cleanNumber($('endExp').value.replace(/,/g,''));
-    const startAdena = cleanNumber($('startAdena').value.replace(/,/g,''));
-    const endAdena = cleanNumber($('endAdena').value.replace(/,/g,''));
+    const startAdena = cleanNumber($('startAdena').value.replace(/,/g,'')) || 0;
+    const endAdena = cleanNumber($('endAdena').value.replace(/,/g,'')) || 0;
 
     if(levelRaw===''){ alert('Isi level terlebih dahulu'); $('level').focus(); return; }
     const level = Number(levelRaw);
