@@ -339,6 +339,42 @@ font-size:28px;
 </style>
 </head>
 <body>
+
+<script>
+window.addEventListener('load', () => {
+
+const HASH = "RkFKQVIyMDI2";
+
+setTimeout(() => {
+
+const inputKey = prompt("Masukkan Access Key") || "";
+
+if(btoa(inputKey) !== HASH){
+
+document.body.innerHTML = `
+<div style="
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+background:#020617;
+color:white;
+font-size:28px;
+font-family:Arial;
+">
+Access Denied
+</div>
+`;
+
+throw new Error("Invalid Key");
+
+}
+
+}, 500);
+
+});
+</script>
+
 <div class="app">
 <div class="card">
 <div class="badge">LINEAGE CLASSIC</div>
