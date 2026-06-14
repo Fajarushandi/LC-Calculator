@@ -1,0 +1,17 @@
+{
+  "name": "Lineage Classic EXP & Adena Calculator",
+  "short_name": "LC Calculator",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#020617",
+  "theme_color": "#16294b",
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
