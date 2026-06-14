@@ -5,6 +5,7 @@
 <meta name="theme-color" content="#16294b">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Kalkulator EXP & Adena farming untuk Lineage Classic">
 
 <title>Lineage Classic EXP & Adena Calculator</title>
 
@@ -18,8 +19,12 @@ padding:0;
 box-sizing:border-box;
 }
 
-body{
+/* Fix: font Cinzel ke semua elemen interaktif */
+body, input, button, textarea, select{
 font-family:'Cinzel',serif;
+}
+
+body{
 background:
 radial-gradient(
 circle at top,
@@ -128,6 +133,21 @@ box-shadow:
 0 0 0 4px rgba(212,175,55,.15);
 }
 
+/* Fix: visual error state di input */
+.input.error{
+border-color:#ef4444;
+box-shadow:0 0 0 4px rgba(239,68,68,.15);
+}
+
+.fieldError{
+color:#f87171;
+font-size:11px;
+font-weight:700;
+margin-top:2px;
+min-height:14px;
+display:block;
+}
+
 .btns{
 display:grid;
 grid-template-columns:1fr 1fr;
@@ -186,6 +206,7 @@ height:18px;
 accent-color:#d4af37;
 }
 
+/* Fix: result pakai animasi fade+slide masuk */
 .result{
 display:none;
 margin-top:26px;
@@ -193,6 +214,14 @@ border-radius:26px;
 overflow:hidden;
 background:#020617;
 border:1px solid #1e293b;
+opacity:0;
+transform:translateY(12px);
+transition:opacity .3s ease, transform .3s ease;
+}
+
+.result.visible{
+opacity:1;
+transform:translateY(0);
 }
 
 .resultTop{
@@ -245,6 +274,11 @@ margin-bottom:8px;
 font-size:20px;
 font-weight:800;
 word-break:break-word;
+}
+
+/* Fix: warna merah kalau adena/exp negatif */
+.statValue.negative{
+color:#f87171;
 }
 
 .copyArea{
@@ -302,6 +336,7 @@ border:1px solid #1e293b;
 border-radius:20px;
 padding:14px;
 margin-bottom:10px;
+position:relative;
 }
 
 .historyCard:first-child{
@@ -321,6 +356,33 @@ color:#94a3b8;
 margin-bottom:8px;
 }
 
+/* Fix: tombol hapus per-item */
+.deleteBtn{
+position:absolute;
+top:12px;
+right:12px;
+background:rgba(239,68,68,.15);
+border:1px solid rgba(239,68,68,.3);
+border-radius:10px;
+color:#f87171;
+font-size:11px;
+font-weight:800;
+padding:5px 10px;
+cursor:pointer;
+transition:.15s;
+}
+
+.deleteBtn:hover{
+background:rgba(239,68,68,.3);
+}
+
+.adenaNote{
+font-size:11px;
+color:#94a3b8;
+margin-top:4px;
+font-weight:700;
+}
+
 @media(max-width:500px){
 
 .btns{
@@ -338,6 +400,12 @@ font-size:28px;
 
 }
 
+@media(prefers-reduced-motion:reduce){
+.result{
+transition:none;
+}
+}
+
 </style>
 </head>
 <body>
@@ -349,22 +417,53 @@ font-size:28px;
 
 <div class="section">
 <div class="sectionTitle">CHARACTER</div>
-<div class="inputBox"><div class="label">Character</div><input class="input" id="charName" autocomplete="off"></div>
-<div class="inputBox"><div class="label">Level</div><input class="input" id="level" type="number" inputmode="numeric" min="1" autocomplete="off"></div>
+<div class="inputBox">
+  <div class="label">Character</div>
+  <input class="input" id="charName" autocomplete="off">
+  <span class="fieldError" id="errCharName"></span>
+</div>
+<div class="inputBox">
+  <div class="label">Level</div>
+  <input class="input" id="level" type="number" inputmode="numeric" min="1" autocomplete="off">
+  <span class="fieldError" id="errLevel"></span>
+</div>
 </div>
 
 <div class="section">
 <div class="sectionTitle">TIME</div>
-<div class="inputBox"><div class="label">Jam Mulai</div><input class="input" id="startTime" type="time"></div>
-<div class="inputBox"><div class="label">Jam Selesai</div><input class="input" id="endTime" type="time"></div>
+<div class="inputBox">
+  <div class="label">Jam Mulai</div>
+  <input class="input" id="startTime" type="time">
+  <span class="fieldError" id="errTime"></span>
+</div>
+<div class="inputBox">
+  <div class="label">Jam Selesai</div>
+  <input class="input" id="endTime" type="time">
+</div>
 </div>
 
 <div class="section">
 <div class="sectionTitle">EXP & ADENA</div>
-<div class="inputBox"><div class="label">EXP Awal</div><input class="input expInput" id="startExp" inputmode="decimal" autocomplete="off"></div>
-<div class="inputBox"><div class="label">Adena Awal</div><input class="input money" id="startAdena" inputmode="decimal" autocomplete="off"></div>
-<div class="inputBox"><div class="label">EXP Akhir</div><input class="input expInput" id="endExp" inputmode="decimal" autocomplete="off"></div>
-<div class="inputBox"><div class="label">Adena Akhir</div><input class="input money" id="endAdena" inputmode="decimal" autocomplete="off"></div>
+<div class="inputBox">
+  <div class="label">EXP Awal</div>
+  <input class="input expInput" id="startExp" inputmode="decimal" autocomplete="off">
+  <span class="fieldError" id="errStartExp"></span>
+</div>
+<div class="inputBox">
+  <div class="label">Adena Awal</div>
+  <input class="input money" id="startAdena" inputmode="decimal" autocomplete="off">
+  <span class="fieldError" id="errStartAdena"></span>
+</div>
+<div class="inputBox">
+  <div class="label">EXP Akhir</div>
+  <input class="input expInput" id="endExp" inputmode="decimal" autocomplete="off">
+  <span class="fieldError" id="errEndExp"></span>
+</div>
+<div class="inputBox">
+  <div class="label">Adena Akhir</div>
+  <input class="input money" id="endAdena" inputmode="decimal" autocomplete="off">
+  <span class="fieldError" id="errEndAdena"></span>
+</div>
 <div class="toggleBox"><input type="checkbox" id="forceLevelUp"><span>Paksa Level Up +1</span></div>
 <div class="toggleBox"><input type="checkbox" id="includeStart"><span>Include Start EXP & Adena in Copy</span></div>
 </div>
@@ -395,29 +494,12 @@ font-size:28px;
 <div class="historyWrap">
 
 <div class="historyHeader">
-
-<div class="sectionTitle">
-FARMING HISTORY
-</div>
-
-<button
-class="secondary"
-onclick="clearHistory()"
-style="
-padding:10px 14px;
-font-size:12px;
-">
-Clear
-</button>
-
+<div class="sectionTitle">FARMING HISTORY</div>
+<button class="secondary" onclick="clearHistory()" style="padding:10px 14px;font-size:12px;">Clear All</button>
 </div>
 
 <div id="historyList">
-
-<div class="historyCard">
-Belum ada riwayat farming
-</div>
-
+<div class="historyCard">Belum ada riwayat farming</div>
 </div>
 
 </div>
@@ -430,9 +512,9 @@ let finalText = '';
 const $ = id => document.getElementById(id);
 
 function cleanNumber(value){
-    const cleaned = String(value||'').replace(/,/g,'').replace(/[^\d.]/g,'').trim();
-    if(cleaned==='') return NaN;
-    return Number(cleaned);
+  const cleaned = String(value||'').replace(/,/g,'').replace(/[^\d.]/g,'').trim();
+  if(cleaned==='') return NaN;
+  return Number(cleaned);
 }
 
 function formatExp(num){ return Number(num).toFixed(4); }
@@ -441,269 +523,277 @@ function formatSignedMoney(num){ return (num>=0?'+':'-') + formatMoney(Math.abs(
 function formatSignedExp(num){ return (num>=0?'+':'-') + formatExp(Math.abs(num)) + '%'; }
 
 function getHours(start,end){
-    if(!start||!end) return NaN;
-    const [sh,sm]=start.split(':').map(Number);
-    const [eh,em]=end.split(':').map(Number);
-    let startMin = sh*60 + sm;
-    let endMin = eh*60 + em;
-    if(endMin<=startMin) endMin += 24*60;
-    return (endMin - startMin)/60;
+  if(!start||!end) return NaN;
+  const [sh,sm]=start.split(':').map(Number);
+  const [eh,em]=end.split(':').map(Number);
+  let startMin = sh*60 + sm;
+  let endMin = eh*60 + em;
+  if(endMin<=startMin) endMin += 24*60;
+  return (endMin - startMin)/60;
 }
 
 function formatHours(hours){
-    if(!Number.isFinite(hours)) return '-';
-    const h = Math.floor(hours);
-    const m = Math.round((hours - h)*60);
-    if(h===0) return `${m} Menit`;
-    if(m===0) return `${h} Jam`;
-    return `${h} Jam ${m} Menit`;
+  if(!Number.isFinite(hours)) return '-';
+  const h = Math.floor(hours);
+  const m = Math.round((hours - h)*60);
+  if(h===0) return `${m} Menit`;
+  if(m===0) return `${h} Jam`;
+  return `${h} Jam ${m} Menit`;
 }
 
 // Format input Adena ribuan otomatis
 document.querySelectorAll('.money').forEach(input=>{
-    input.addEventListener('input',()=>{
-        let numeric = input.value.replace(/[^\d]/g,'');
-        if(numeric===''){ input.value=''; return; }
-        input.value = Number(numeric).toLocaleString('en-US');
-    });
+  input.addEventListener('input',()=>{
+    let numeric = input.value.replace(/[^\d]/g,'');
+    if(numeric===''){ input.value=''; return; }
+    input.value = Number(numeric).toLocaleString('en-US');
+  });
 });
 
-// Input EXP handling
+// Input EXP
 document.querySelectorAll('.expInput').forEach(input=>{
-    input.addEventListener('input',()=>{
-        input.value = input.value.replace(/,/g,'.').replace(/[^\d.]/g,'').replace(/(\..*)\./g,'$1');
-    });
+  input.addEventListener('input',()=>{
+    input.value = input.value.replace(/,/g,'.').replace(/[^\d.]/g,'').replace(/(\..*)\./g,'$1');
+  });
 });
+
+// Clear error state on focus
+document.querySelectorAll('.input').forEach(input=>{
+  input.addEventListener('focus',()=>{
+    input.classList.remove('error');
+  });
+});
+
+function showError(inputId, errId, msg){
+  const el = $(inputId);
+  const err = $(errId);
+  if(el) el.classList.add('error');
+  if(err) err.innerText = msg;
+}
+
+function clearErrors(){
+  document.querySelectorAll('.input').forEach(el => el.classList.remove('error'));
+  document.querySelectorAll('.fieldError').forEach(el => el.innerText = '');
+}
 
 function calculate(){
-    $('status').innerText='';
-    const charName = $('charName').value.trim() || '-';
-    const levelRaw = $('level').value.trim();
-    const startTime = $('startTime').value;
-    const endTime = $('endTime').value;
-    const startExp = cleanNumber($('startExp').value.replace(/,/g,''));
-    const endExp = cleanNumber($('endExp').value.replace(/,/g,''));
-    const startAdena = cleanNumber($('startAdena').value.replace(/,/g,'')) || 0;
-    const endAdena = cleanNumber($('endAdena').value.replace(/,/g,'')) || 0;
+  $('status').innerText='';
+  clearErrors();
 
-    if(levelRaw===''){ alert('Isi level terlebih dahulu'); $('level').focus(); return; }
+  const charName = $('charName').value.trim() || '-';
+  const levelRaw = $('level').value.trim();
+  const startTime = $('startTime').value;
+  const endTime = $('endTime').value;
+  const startExpRaw = $('startExp').value.replace(/,/g,'');
+  const endExpRaw = $('endExp').value.replace(/,/g,'');
+  const startAdenaRaw = $('startAdena').value.replace(/,/g,'');
+  const endAdenaRaw = $('endAdena').value.replace(/,/g,'');
+
+  const startExp = cleanNumber(startExpRaw);
+  const endExp = cleanNumber(endExpRaw);
+
+  // Fix: validasi adena wajib diisi
+  const startAdenaStr = $('startAdena').value.trim();
+  const endAdenaStr = $('endAdena').value.trim();
+  const startAdena = cleanNumber(startAdenaRaw);
+  const endAdena = cleanNumber(endAdenaRaw);
+
+  let hasError = false;
+
+  if(levelRaw===''){
+    showError('level','errLevel','Level wajib diisi');
+    hasError=true;
+  } else {
     const level = Number(levelRaw);
-    if(!Number.isInteger(level) || level <1){ alert('Level harus angka valid'); $('level').focus(); return; }
-    if(!startTime || !endTime){ alert('Isi jam mulai & jam selesai'); return; }
-    if(isNaN(startExp) || isNaN(endExp)){ alert('Isi EXP awal & EXP akhir'); return; }
-    if(startExp<0 || startExp>100 || endExp<0 || endExp>100){ alert('EXP harus antara 0 sampai 100'); return; }
-    if(isNaN(startAdena) || isNaN(endAdena)){ alert('Isi Adena awal & Adena akhir'); return; }
+    if(!Number.isInteger(level) || level < 1){
+      showError('level','errLevel','Level harus angka valid (min 1)');
+      hasError=true;
+    }
+  }
 
-    const hours = getHours(startTime,endTime);
-    if(!Number.isFinite(hours)){ alert('Format jam tidak valid'); return; }
+  if(!startTime || !endTime){
+    showError('startTime','errTime','Jam mulai & selesai wajib diisi');
+    hasError=true;
+  }
 
-    const forceLevelUp = $('forceLevelUp')?.checked === true;
-    const includeStart = $('includeStart')?.checked === true;
-    const isLevelUp = forceLevelUp || endExp < startExp;
-    const expGain = isLevelUp ? (100 - startExp) + endExp : endExp - startExp;
-    const expPerHour = expGain / hours;
-    const adenaGain = endAdena - startAdena;
-    const levelText = isLevelUp ? `Lv ${level} → ${level+1}` : `Lv ${level}`;
+  if(isNaN(startExp)){
+    showError('startExp','errStartExp','EXP awal wajib diisi');
+    hasError=true;
+  } else if(startExp < 0 || startExp > 100){
+    showError('startExp','errStartExp','EXP harus antara 0–100');
+    hasError=true;
+  }
 
-    // Format copy text sesuai permintaan fix double %
-    finalText = `${charName} (${startTime} - ${endTime})
+  if(isNaN(endExp)){
+    showError('endExp','errEndExp','EXP akhir wajib diisi');
+    hasError=true;
+  } else if(endExp < 0 || endExp > 100){
+    showError('endExp','errEndExp','EXP harus antara 0–100');
+    hasError=true;
+  }
+
+  if(startAdenaStr === '' || isNaN(startAdena)){
+    showError('startAdena','errStartAdena','Adena awal wajib diisi');
+    hasError=true;
+  }
+
+  if(endAdenaStr === '' || isNaN(endAdena)){
+    showError('endAdena','errEndAdena','Adena akhir wajib diisi');
+    hasError=true;
+  }
+
+  if(hasError) return;
+
+  const hours = getHours(startTime, endTime);
+  if(!Number.isFinite(hours)){
+    showError('startTime','errTime','Format jam tidak valid');
+    return;
+  }
+
+  const level = Number(levelRaw);
+  const forceLevelUp = $('forceLevelUp')?.checked === true;
+  const includeStart = $('includeStart')?.checked === true;
+  const isLevelUp = forceLevelUp || endExp < startExp;
+  const expGain = isLevelUp ? (100 - startExp) + endExp : endExp - startExp;
+  const expPerHour = expGain / hours;
+  const adenaGain = endAdena - startAdena;
+  const levelText = isLevelUp ? `Lv ${level} → ${level+1}` : `Lv ${level}`;
+
+  finalText = `${charName} (${startTime} - ${endTime})
 ${levelText}
 Exp ${formatExp(endExp)}%
 Adena ${formatMoney(endAdena)}`;
 
-    if(includeStart){
-        finalText += `
+  if(includeStart){
+    finalText += `
 
 Started with:
 Exp ${formatExp(startExp)}%
 Adena ${formatMoney(startAdena)}`;
-    }
+  }
 
-    finalText += `
+  finalText += `
 
 Gain:
 Exp ${formatSignedExp(expGain)}
 Exp/jam ${formatSignedExp(expPerHour)}
 Adena ${formatSignedMoney(adenaGain)}`;
 
-    $('copyText').value = finalText;
-    $('resName').innerText = charName;
-    $('resTime').innerText = `${startTime} - ${endTime} • ${formatHours(hours)}`;
-    $('expGain').innerText = formatSignedExp(expGain);
-$('expHour').innerText = formatSignedExp(expPerHour);
+  // Fix: warna negatif di stat cards
+  const expGainEl = $('expGain');
+  const expHourEl = $('expHour');
+  expGainEl.innerText = formatSignedExp(expGain);
+  expHourEl.innerText = formatSignedExp(expPerHour);
+  expGainEl.classList.toggle('negative', expGain < 0);
+  expHourEl.classList.toggle('negative', expPerHour < 0);
 
-saveHistory({
-id:Date.now(),
-date:new Date().toLocaleString('id-ID'),
-startTime:startTime,
-endTime:endTime,
-duration:formatHours(hours),
-name:charName,
-level:levelText,
-expGain:formatSignedExp(expGain),
-adenaGain:formatSignedMoney(adenaGain)
-});
+  $('copyText').value = finalText;
+  $('resName').innerText = charName;
+  $('resTime').innerText = `${startTime} - ${endTime} • ${formatHours(hours)}`;
 
-$('result').style.display = 'block';
-    setTimeout(()=>{$('result').scrollIntoView({behavior:'smooth',block:'start'});},80);
+  // Fix: animasi fade+slide
+  const resultEl = $('result');
+  resultEl.style.display = 'block';
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      resultEl.classList.add('visible');
+    });
+  });
+  setTimeout(()=>{ resultEl.scrollIntoView({behavior:'smooth',block:'start'}); }, 80);
+
+  saveHistory({
+    id: Date.now(),
+    date: new Date().toLocaleString('id-ID'),
+    startTime,
+    endTime,
+    duration: formatHours(hours),
+    name: charName,
+    level: levelText,
+    expGain: formatSignedExp(expGain),
+    adenaGain: formatSignedMoney(adenaGain)
+  });
 }
 
 async function copyResult(){
-    if(!finalText){ alert('Belum ada hasil'); return; }
-    try { await navigator.clipboard.writeText(finalText); }
-    catch{
-        const textArea = $('copyText');
-        textArea.focus(); textArea.select();
-        document.execCommand('copy');
-    }
-    $('status').innerText='Berhasil dicopy ✓';
-    setTimeout(()=>{$('status').innerText='';},1500);
+  if(!finalText){ alert('Belum ada hasil'); return; }
+  try { await navigator.clipboard.writeText(finalText); }
+  catch{
+    const textArea = $('copyText');
+    textArea.focus(); textArea.select();
+    document.execCommand('copy');
+  }
+  $('status').innerText='Berhasil dicopy ✓';
+  setTimeout(()=>{ $('status').innerText=''; }, 1500);
 }
 
 function resetAll(){
-
-document
-.querySelectorAll('input')
-.forEach(input=>{
-
-if(input.type==='checkbox'){
-input.checked=false;
-}else{
-input.value='';
-}
-
-});
-
-finalText='';
-
-$('result').style.display='none';
-$('copyText').value='';
-$('status').innerText='';
-
-window.scrollTo({
-top:0,
-behavior:'smooth'
-});
-
+  document.querySelectorAll('input').forEach(input=>{
+    if(input.type==='checkbox'){ input.checked=false; }
+    else { input.value=''; }
+  });
+  clearErrors();
+  finalText='';
+  const resultEl = $('result');
+  resultEl.classList.remove('visible');
+  setTimeout(()=>{ resultEl.style.display='none'; }, 300);
+  $('copyText').value='';
+  $('status').innerText='';
+  window.scrollTo({ top:0, behavior:'smooth' });
 }
 
 function saveHistory(data){
-
-let history =
-JSON.parse(
-localStorage.getItem('lc_history') || '[]'
-);
-
-const last = history[0];
-
-if(
-last &&
-last.name === data.name &&
-last.startTime === data.startTime &&
-last.endTime === data.endTime &&
-last.expGain === data.expGain &&
-last.adenaGain === data.adenaGain
-){
-return;
+  let history = JSON.parse(localStorage.getItem('lc_history') || '[]');
+  const last = history[0];
+  if(
+    last &&
+    last.name === data.name &&
+    last.startTime === data.startTime &&
+    last.endTime === data.endTime &&
+    last.expGain === data.expGain &&
+    last.adenaGain === data.adenaGain
+  ){ return; }
+  history.unshift(data);
+  if(history.length > 20) history = history.slice(0,20);
+  localStorage.setItem('lc_history', JSON.stringify(history));
+  renderHistory();
 }
 
-history.unshift(data);
-
-if(history.length > 20){
-history = history.slice(0,20);
-}
-
-localStorage.setItem(
-'lc_history',
-JSON.stringify(history)
-);
-
-renderHistory();
+// Fix: hapus per-item
+function deleteHistoryItem(id){
+  let history = JSON.parse(localStorage.getItem('lc_history') || '[]');
+  history = history.filter(item => item.id !== id);
+  localStorage.setItem('lc_history', JSON.stringify(history));
+  renderHistory();
 }
 
 function renderHistory(){
+  const list = document.getElementById('historyList');
+  if(!list) return;
+  const history = JSON.parse(localStorage.getItem('lc_history') || '[]');
 
-const list =
-document.getElementById('historyList');
+  if(history.length===0){
+    list.innerHTML = `<div class="historyCard">Belum ada riwayat farming</div>`;
+    return;
+  }
 
-if(!list) return;
-
-const history =
-JSON.parse(
-localStorage.getItem('lc_history') || '[]'
-);
-
-if(history.length===0){
-
-list.innerHTML = `
-<div class="historyCard">
-Belum ada riwayat farming
-</div>
-`;
-
-return;
-}
-
-list.innerHTML =
-history.map(item => `
-
-<div class="historyCard">
-
-<div class="historyName">
-${item.name}
-</div>
-
-<div class="historyDate">
-🕒 ${item.startTime} - ${item.endTime}
-</div>
-
-<div class="historyDate">
-⏳ ${item.duration}
-</div>
-
-<div style="
-margin-top:8px;
-font-weight:700;
-">
-${item.level}
-</div>
-
-<div>
-EXP ${item.expGain}
-</div>
-
-<div>
-Adena ${item.adenaGain}
-</div>
-
-<div style="
-margin-top:8px;
-font-size:11px;
-color:#64748b;
-">
-${item.date}
-</div>
-
-</div>
-
-`).join('');
+  list.innerHTML = history.map((item, idx) => `
+    <div class="historyCard">
+      <button class="deleteBtn" onclick="deleteHistoryItem(${item.id})">Hapus</button>
+      <div class="historyName">${item.name}</div>
+      <div class="historyDate">🕒 ${item.startTime} - ${item.endTime}</div>
+      <div class="historyDate">⏳ ${item.duration}</div>
+      <div style="margin-top:8px;font-weight:700;">${item.level}</div>
+      <div>EXP ${item.expGain}</div>
+      <div>Adena ${item.adenaGain}${item.adenaGain.startsWith('-') ? '<div class="adenaNote">⚠ Adena berkurang (beli item / mati?)</div>' : ''}</div>
+      <div style="margin-top:8px;font-size:11px;color:#64748b;">${item.date}</div>
+    </div>
+  `).join('');
 }
 
 function clearHistory(){
-
-if(
-!confirm(
-'Hapus semua riwayat farming?'
-)
-){
-return;
-}
-
-localStorage.removeItem(
-'lc_history'
-);
-
-renderHistory();
+  if(!confirm('Hapus semua riwayat farming?')) return;
+  localStorage.removeItem('lc_history');
+  renderHistory();
 }
 
 renderHistory();
