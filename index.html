@@ -317,71 +317,8 @@ font-size:13px;
 font-weight:700;
 }
 
-/* HISTORY */
 
-.historyWrap{
-margin-top:26px;
-}
 
-.historyHeader{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:12px;
-}
-
-.historyCard{
-background:#0f172a;
-border:1px solid #1e293b;
-border-radius:20px;
-padding:14px;
-margin-bottom:10px;
-position:relative;
-}
-
-.historyCard:first-child{
-border-color:#d4af37;
-box-shadow:0 0 15px rgba(212,175,55,.12);
-}
-
-.historyName{
-font-weight:800;
-color:#f8e7a1;
-margin-bottom:5px;
-}
-
-.historyDate{
-font-size:12px;
-color:#94a3b8;
-margin-bottom:8px;
-}
-
-/* Fix: tombol hapus per-item */
-.deleteBtn{
-position:absolute;
-top:12px;
-right:12px;
-background:rgba(239,68,68,.15);
-border:1px solid rgba(239,68,68,.3);
-border-radius:10px;
-color:#f87171;
-font-size:11px;
-font-weight:800;
-padding:5px 10px;
-cursor:pointer;
-transition:.15s;
-}
-
-.deleteBtn:hover{
-background:rgba(239,68,68,.3);
-}
-
-.adenaNote{
-font-size:11px;
-color:#94a3b8;
-margin-top:4px;
-font-weight:700;
-}
 
 @media(max-width:500px){
 
@@ -491,18 +428,7 @@ transition:none;
 
 </div>
 
-<div class="historyWrap">
 
-<div class="historyHeader">
-<div class="sectionTitle">FARMING HISTORY</div>
-<button class="secondary" onclick="clearHistory()" style="padding:10px 14px;font-size:12px;">Clear All</button>
-</div>
-
-<div id="historyList">
-<div class="historyCard">Belum ada riwayat farming</div>
-</div>
-
-</div>
 
 </div>
 </div>
@@ -701,17 +627,6 @@ Adena ${formatSignedMoney(adenaGain)}`;
   });
   setTimeout(()=>{ resultEl.scrollIntoView({behavior:'smooth',block:'start'}); }, 80);
 
-  saveHistory({
-    id: Date.now(),
-    date: new Date().toLocaleString('id-ID'),
-    startTime,
-    endTime,
-    duration: formatHours(hours),
-    name: charName,
-    level: levelText,
-    expGain: formatSignedExp(expGain),
-    adenaGain: formatSignedMoney(adenaGain)
-  });
 }
 
 async function copyResult(){
@@ -741,62 +656,7 @@ function resetAll(){
   window.scrollTo({ top:0, behavior:'smooth' });
 }
 
-function saveHistory(data){
-  let history = JSON.parse(localStorage.getItem('lc_history') || '[]');
-  const last = history[0];
-  if(
-    last &&
-    last.name === data.name &&
-    last.startTime === data.startTime &&
-    last.endTime === data.endTime &&
-    last.expGain === data.expGain &&
-    last.adenaGain === data.adenaGain
-  ){ return; }
-  history.unshift(data);
-  if(history.length > 20) history = history.slice(0,20);
-  localStorage.setItem('lc_history', JSON.stringify(history));
-  renderHistory();
-}
 
-// Fix: hapus per-item
-function deleteHistoryItem(id){
-  let history = JSON.parse(localStorage.getItem('lc_history') || '[]');
-  history = history.filter(item => item.id !== id);
-  localStorage.setItem('lc_history', JSON.stringify(history));
-  renderHistory();
-}
-
-function renderHistory(){
-  const list = document.getElementById('historyList');
-  if(!list) return;
-  const history = JSON.parse(localStorage.getItem('lc_history') || '[]');
-
-  if(history.length===0){
-    list.innerHTML = `<div class="historyCard">Belum ada riwayat farming</div>`;
-    return;
-  }
-
-  list.innerHTML = history.map((item, idx) => `
-    <div class="historyCard">
-      <button class="deleteBtn" onclick="deleteHistoryItem(${item.id})">Hapus</button>
-      <div class="historyName">${item.name}</div>
-      <div class="historyDate">🕒 ${item.startTime} - ${item.endTime}</div>
-      <div class="historyDate">⏳ ${item.duration}</div>
-      <div style="margin-top:8px;font-weight:700;">${item.level}</div>
-      <div>EXP ${item.expGain}</div>
-      <div>Adena ${item.adenaGain}${item.adenaGain.startsWith('-') ? '<div class="adenaNote">⚠ Adena berkurang (beli item / mati?)</div>' : ''}</div>
-      <div style="margin-top:8px;font-size:11px;color:#64748b;">${item.date}</div>
-    </div>
-  `).join('');
-}
-
-function clearHistory(){
-  if(!confirm('Hapus semua riwayat farming?')) return;
-  localStorage.removeItem('lc_history');
-  renderHistory();
-}
-
-renderHistory();
 </script>
 <script>
 if ("serviceWorker" in navigator) {
