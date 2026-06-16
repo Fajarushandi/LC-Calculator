@@ -418,7 +418,7 @@ transition:none;
 <div class="resultBody">
 <div class="stats">
 <div class="statCard"><div class="statLabel">EXP Gain</div><div class="statValue" id="expGain">0.0000%</div></div>
-<div class="statCard"><div class="statLabel">EXP / Jam</div><div class="statValue" id="expHour">0.0000%</div></div>
+<div class="statCard"><div class="statLabel">EXP / Hour</div><div class="statValue" id="expHour">0.0000%</div></div>
 </div>
 <textarea class="copyArea" id="copyText" readonly></textarea>
 <button class="copyBtn" onclick="copyResult()">Copy Hasil</button>
@@ -602,7 +602,7 @@ Adena ${formatMoney(startAdena)}`;
 
 Gain:
 Exp ${formatSignedExp(expGain)}
-Exp/jam ${formatSignedExp(expPerHour)}
+Exp/hour ${formatSignedExp(expPerHour)}
 Adena ${formatSignedMoney(adenaGain)}`;
 
   // Fix: warna negatif di stat cards
