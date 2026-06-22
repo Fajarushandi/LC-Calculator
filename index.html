@@ -6,9 +6,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Kalkulator EXP & Adena farming untuk Lineage Classic">
+<link rel="icon" href="/icon-192.png">
+<link rel="apple-touch-icon" href="/icon-192.png">
 
 <title>Lineage Classic EXP & Adena Calculator</title>
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800&display=swap" rel="stylesheet">
 
 <style>
@@ -19,7 +23,7 @@ padding:0;
 box-sizing:border-box;
 }
 
-/* Fix: font Cinzel ke semua elemen interaktif */
+/* Font Cinzel ke semua elemen interaktif */
 body, input, button, textarea, select{
 font-family:'Cinzel',serif;
 }
@@ -133,7 +137,6 @@ box-shadow:
 0 0 0 4px rgba(212,175,55,.15);
 }
 
-/* Fix: visual error state di input */
 .input.error{
 border-color:#ef4444;
 box-shadow:0 0 0 4px rgba(239,68,68,.15);
@@ -146,6 +149,13 @@ font-weight:700;
 margin-top:2px;
 min-height:14px;
 display:block;
+}
+
+.hint{
+color:#64748b;
+font-size:11px;
+font-weight:600;
+margin-top:2px;
 }
 
 .btns{
@@ -204,9 +214,22 @@ margin-top:14px;
 width:18px;
 height:18px;
 accent-color:#d4af37;
+flex-shrink:0;
 }
 
-/* Fix: result pakai animasi fade+slide masuk */
+.toggleBox span{
+flex:1;
+}
+
+.toggleHint{
+display:block;
+color:#64748b;
+font-size:11px;
+font-weight:600;
+margin-top:3px;
+}
+
+/* Result animasi fade+slide masuk */
 .result{
 display:none;
 margin-top:26px;
@@ -276,7 +299,6 @@ font-weight:800;
 word-break:break-word;
 }
 
-/* Fix: warna merah kalau adena/exp negatif */
 .statValue.negative{
 color:#f87171;
 }
@@ -317,6 +339,35 @@ font-size:13px;
 font-weight:700;
 }
 
+.updateBanner{
+display:none;
+position:fixed;
+left:0; right:0; bottom:0;
+background:#0f172a;
+border-top:1px solid #d4af37;
+padding:14px 18px;
+text-align:center;
+font-size:13px;
+font-weight:700;
+color:#f8e7a1;
+z-index:999;
+gap:10px;
+align-items:center;
+justify-content:center;
+}
+
+.updateBanner.show{
+display:flex;
+}
+
+.updateBanner button{
+padding:8px 16px;
+border-radius:14px;
+font-size:12px;
+background:#d4af37;
+color:#020617;
+}
+
 
 
 
@@ -355,19 +406,19 @@ transition:none;
 <div class="section">
 <div class="sectionTitle">CHARACTER</div>
 <div class="inputBox">
-  <div class="label">Character</div>
-  <input class="input" id="charName" autocomplete="off" style="font-family:'Segoe UI',Arial,sans-serif;">
+  <div class="label">Nama Karakter</div>
+  <input class="input" id="charName" autocomplete="off" maxlength="40" style="font-family:'Segoe UI',Arial,sans-serif;">
   <span class="fieldError" id="errCharName"></span>
 </div>
 <div class="inputBox">
   <div class="label">Level</div>
-  <input class="input" id="level" type="number" inputmode="numeric" min="1" autocomplete="off">
+  <input class="input" id="level" type="number" inputmode="numeric" min="1" max="99" autocomplete="off">
   <span class="fieldError" id="errLevel"></span>
 </div>
 </div>
 
 <div class="section">
-<div class="sectionTitle">TIME</div>
+<div class="sectionTitle">WAKTU</div>
 <div class="inputBox">
   <div class="label">Jam Mulai</div>
   <input class="input" id="startTime" type="time">
@@ -376,6 +427,7 @@ transition:none;
 <div class="inputBox">
   <div class="label">Jam Selesai</div>
   <input class="input" id="endTime" type="time">
+  <span class="fieldError" id="errEndTime"></span>
 </div>
 </div>
 
@@ -401,8 +453,14 @@ transition:none;
   <input class="input money" id="endAdena" inputmode="decimal" autocomplete="off">
   <span class="fieldError" id="errEndAdena"></span>
 </div>
-<div class="toggleBox"><input type="checkbox" id="forceLevelUp"><span>Paksa Level Up +1</span></div>
-<div class="toggleBox"><input type="checkbox" id="includeStart"><span>Include Start EXP & Adena in Copy</span></div>
+<div class="toggleBox">
+  <input type="checkbox" id="levelUp">
+  <span>
+    Karakter Naik Level
+    <span class="toggleHint">Centang kalau EXP akhir lebih kecil karena naik level</span>
+  </span>
+</div>
+<div class="toggleBox"><input type="checkbox" id="includeStart"><span>Sertakan EXP & Adena Awal di hasil Copy</span></div>
 </div>
 
 <div class="btns">
@@ -418,7 +476,7 @@ transition:none;
 <div class="resultBody">
 <div class="stats">
 <div class="statCard"><div class="statLabel">EXP Gain</div><div class="statValue" id="expGain">0.0000%</div></div>
-<div class="statCard"><div class="statLabel">EXP / Hour</div><div class="statValue" id="expHour">0.0000%</div></div>
+<div class="statCard"><div class="statLabel">EXP / Jam</div><div class="statValue" id="expHour">0.0000%</div></div>
 </div>
 <textarea class="copyArea" id="copyText" readonly></textarea>
 <button class="copyBtn" onclick="copyResult()">Copy Hasil</button>
@@ -431,6 +489,10 @@ transition:none;
 
 
 </div>
+
+<div class="updateBanner" id="updateBanner">
+  <span>Versi baru tersedia</span>
+  <button onclick="applyUpdate()">Update</button>
 </div>
 
 <script>
@@ -448,13 +510,18 @@ function formatMoney(num){ return Number(num).toLocaleString('en-US'); }
 function formatSignedMoney(num){ return (num>=0?'+':'-') + formatMoney(Math.abs(num)); }
 function formatSignedExp(num){ return (num>=0?'+':'-') + formatExp(Math.abs(num)) + '%'; }
 
+function getMinutes(t){
+  const [h,m] = t.split(':').map(Number);
+  return h*60+m;
+}
+
+// Fix: durasi 0 menit ditangani eksplisit, bukan otomatis jadi 24 jam
 function getHours(start,end){
   if(!start||!end) return NaN;
-  const [sh,sm]=start.split(':').map(Number);
-  const [eh,em]=end.split(':').map(Number);
-  let startMin = sh*60 + sm;
-  let endMin = eh*60 + em;
-  if(endMin<=startMin) endMin += 24*60;
+  let startMin = getMinutes(start);
+  let endMin = getMinutes(end);
+  if(endMin === startMin) return 0;
+  if(endMin < startMin) endMin += 24*60; // lewat tengah malam
   return (endMin - startMin)/60;
 }
 
@@ -462,6 +529,7 @@ function formatHours(hours){
   if(!Number.isFinite(hours)) return '-';
   const h = Math.floor(hours);
   const m = Math.round((hours - h)*60);
+  if(h===0 && m===0) return '0 Menit';
   if(h===0) return `${m} Menit`;
   if(m===0) return `${h} Jam`;
   return `${h} Jam ${m} Menit`;
@@ -506,7 +574,7 @@ function calculate(){
   $('status').innerText='';
   clearErrors();
 
-  const charName = $('charName').value.trim() || '-';
+  const charNameRaw = $('charName').value.trim();
   const levelRaw = $('level').value.trim();
   const startTime = $('startTime').value;
   const endTime = $('endTime').value;
@@ -518,13 +586,18 @@ function calculate(){
   const startExp = cleanNumber(startExpRaw);
   const endExp = cleanNumber(endExpRaw);
 
-  // Fix: validasi adena wajib diisi
   const startAdenaStr = $('startAdena').value.trim();
   const endAdenaStr = $('endAdena').value.trim();
   const startAdena = cleanNumber(startAdenaRaw);
   const endAdena = cleanNumber(endAdenaRaw);
 
   let hasError = false;
+
+  // Fix: validasi nama karakter (elemen errCharName sebelumnya tidak terhubung)
+  if(charNameRaw === ''){
+    showError('charName','errCharName','Nama karakter wajib diisi');
+    hasError=true;
+  }
 
   if(levelRaw===''){
     showError('level','errLevel','Level wajib diisi');
@@ -537,8 +610,12 @@ function calculate(){
     }
   }
 
-  if(!startTime || !endTime){
-    showError('startTime','errTime','Jam mulai & selesai wajib diisi');
+  if(!startTime){
+    showError('startTime','errTime','Jam mulai wajib diisi');
+    hasError=true;
+  }
+  if(!endTime){
+    showError('endTime','errEndTime','Jam selesai wajib diisi');
     hasError=true;
   }
 
@@ -571,15 +648,34 @@ function calculate(){
   if(hasError) return;
 
   const hours = getHours(startTime, endTime);
-  if(!Number.isFinite(hours)){
-    showError('startTime','errTime','Format jam tidak valid');
+
+  // Fix: durasi 0 menit dianggap error, bukan dihitung sebagai 24 jam
+  if(hours === 0){
+    showError('startTime','errTime','Jam mulai & selesai tidak boleh sama');
+    showError('endTime','errEndTime','Jam mulai & selesai tidak boleh sama');
     return;
   }
 
   const level = Number(levelRaw);
-  const forceLevelUp = $('forceLevelUp')?.checked === true;
+  const charName = charNameRaw;
+
+  // Fix: level up sekarang murni ditentukan oleh toggle eksplisit user,
+  // bukan auto-detect dari endExp < startExp (yang sebelumnya rawan salah
+  // kalau user cuma typo, bukan benar-benar naik level).
+  const isLevelUp = $('levelUp')?.checked === true;
   const includeStart = $('includeStart')?.checked === true;
-  const isLevelUp = forceLevelUp || endExp < startExp;
+
+  // Fix: kalau user bilang naik level tapi endExp >= startExp, itu kombinasi
+  // input yang tidak konsisten -> beri tahu user, jangan diam-diam dihitung salah.
+  if(isLevelUp && endExp >= startExp){
+    showError('endExp','errEndExp','EXP akhir harus lebih kecil dari EXP awal kalau "Naik Level" dicentang');
+    return;
+  }
+  if(!isLevelUp && endExp < startExp){
+    showError('endExp','errEndExp','EXP akhir lebih kecil dari awal — centang "Karakter Naik Level" kalau ini benar, atau perbaiki angkanya');
+    return;
+  }
+
   const expGain = isLevelUp ? (100 - startExp) + endExp : endExp - startExp;
   const expPerHour = expGain / hours;
   const adenaGain = endAdena - startAdena;
@@ -605,7 +701,6 @@ Exp ${formatSignedExp(expGain)}
 Exp/hour ${formatSignedExp(expPerHour)}
 Adena ${formatSignedMoney(adenaGain)}`;
 
-  // Fix: warna negatif di stat cards
   const expGainEl = $('expGain');
   const expHourEl = $('expHour');
   expGainEl.innerText = formatSignedExp(expGain);
@@ -617,7 +712,6 @@ Adena ${formatSignedMoney(adenaGain)}`;
   $('resName').innerText = charName;
   $('resTime').innerText = `${startTime} - ${endTime} • ${formatHours(hours)}`;
 
-  // Fix: animasi fade+slide
   const resultEl = $('result');
   resultEl.style.display = 'block';
   requestAnimationFrame(() => {
@@ -659,8 +753,37 @@ function resetAll(){
 
 </script>
 <script>
+// Fix: auto-update service worker — sebelumnya SKIP_WAITING tersedia di sw.js
+// tapi tidak pernah dipanggil dari halaman, jadi update baru baru aktif
+// setelah reload manual berkali-kali. Sekarang ada banner + tombol update.
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("/sw.js");
+  let refreshing = false;
+
+  navigator.serviceWorker.register("/sw.js").then(reg => {
+    reg.addEventListener('updatefound', () => {
+      const newWorker = reg.installing;
+      if(!newWorker) return;
+      newWorker.addEventListener('statechange', () => {
+        if(newWorker.state === 'installed' && navigator.serviceWorker.controller){
+          $('updateBanner').classList.add('show');
+        }
+      });
+    });
+  });
+
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if(refreshing) return;
+    refreshing = true;
+    window.location.reload();
+  });
+
+  window.applyUpdate = function(){
+    navigator.serviceWorker.getRegistration().then(reg => {
+      if(reg && reg.waiting){
+        reg.waiting.postMessage('SKIP_WAITING');
+      }
+    });
+  };
 }
 </script>
 </body>

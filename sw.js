@@ -1,6 +1,6 @@
 // Naikkan nomor ini SETIAP kali kamu deploy update baru.
 // Ini yang bikin browser tahu ada versi baru & buang cache lama.
-const VERSION = 'v2';
+const VERSION = 'v3';
 const CACHE = `lc-${VERSION}`;
 
 const ASSETS = [
@@ -8,12 +8,16 @@ const ASSETS = [
   '/index.html',
   '/manifest.json',
   '/icon-192.png',
-  '/icon-512.png'
+  '/icon-512.png',
+  '/icon-192-maskable.png',
+  '/icon-512-maskable.png'
 ];
 
 self.addEventListener('install', e => {
   e.waitUntil(
-    caches.open(CACHE).then(c => c.addAll(ASSETS))
+    caches.open(CACHE)
+      .then(c => c.addAll(ASSETS))
+      .catch(err => console.error('SW install cache failed:', err))
   );
   self.skipWaiting();
 });
@@ -34,6 +38,9 @@ self.addEventListener('fetch', e => {
 
   // Hanya tangani GET request
   if (req.method !== 'GET') return;
+
+  // Abaikan request cross-origin (misal Google Fonts) -> biarkan browser handle langsung
+  if (new URL(req.url).origin !== self.location.origin) return;
 
   // Network-first untuk HTML & JS (termasuk navigasi/index.html)
   // -> selalu coba ambil versi terbaru dari server dulu,
@@ -67,7 +74,7 @@ self.addEventListener('fetch', e => {
   );
 });
 
-// Opsional: izinkan halaman trigger update manual via postMessage
+// Izinkan halaman trigger update manual via postMessage
 self.addEventListener('message', e => {
   if (e.data === 'SKIP_WAITING') {
     self.skipWaiting();
