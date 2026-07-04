@@ -681,7 +681,8 @@ function calculate(){
   const adenaGain = endAdena - startAdena;
   const levelText = isLevelUp ? `Lv ${level} → ${level+1}` : `Lv ${level}`;
 
-  finalText = `${charName} (${startTime} - ${endTime})
+  finalText = `[End Leveling]
+${charName} (${startTime} - ${endTime})
 ${levelText}
 Exp ${formatExp(endExp)}%
 Adena ${formatMoney(endAdena)}`;
