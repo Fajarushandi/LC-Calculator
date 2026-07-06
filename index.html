@@ -142,6 +142,22 @@ border-color:#ef4444;
 box-shadow:0 0 0 4px rgba(239,68,68,.15);
 }
 
+select.input{
+appearance:none;
+-webkit-appearance:none;
+background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%23d4af37' stroke-width='2'%3E%3Cpath d='M6 8l4 4 4-4'/%3E%3C/svg%3E");
+background-repeat:no-repeat;
+background-position:right 16px center;
+background-size:16px;
+padding-right:42px;
+cursor:pointer;
+}
+
+select.input option{
+background:#020617;
+color:#fff;
+}
+
 .fieldError{
 color:#f87171;
 font-size:11px;
@@ -406,6 +422,13 @@ transition:none;
 <div class="section">
 <div class="sectionTitle">CHARACTER</div>
 <div class="inputBox">
+  <div class="label">Computer</div>
+  <select class="input" id="computer">
+    <option value="">Pilih Computer</option>
+  </select>
+  <span class="fieldError" id="errComputer"></span>
+</div>
+<div class="inputBox">
   <div class="label">Nama Karakter</div>
   <input class="input" id="charName" autocomplete="off" maxlength="40" style="font-family:'Segoe UI',Arial,sans-serif;">
   <span class="fieldError" id="errCharName"></span>
@@ -498,6 +521,38 @@ transition:none;
 <script>
 let finalText = '';
 const $ = id => document.getElementById(id);
+
+// Isi dropdown Computer: nomor 1-10, huruf A-J, lalu Laptop 1
+(function populateComputer(){
+  const sel = $('computer');
+  for(let i=1;i<=10;i++){
+    const opt = document.createElement('option');
+    opt.value = i;
+    opt.textContent = i;
+    sel.appendChild(opt);
+  }
+  for(let c=65;c<=74;c++){ // A(65) sampai J(74)
+    const huruf = String.fromCharCode(c);
+    const opt = document.createElement('option');
+    opt.value = huruf;
+    opt.textContent = huruf;
+    sel.appendChild(opt);
+  }
+  const laptopOpt = document.createElement('option');
+  laptopOpt.value = 'Laptop';
+  laptopOpt.textContent = 'Laptop';
+  sel.appendChild(laptopOpt);
+})();
+
+function getComputerId(){
+  return $('computer').value;
+}
+
+function getComputerLabel(){
+  const val = getComputerId();
+  if(!val) return '';
+  return val.startsWith('Laptop') ? val : `Computer ${val}`;
+}
 
 function cleanNumber(value){
   const cleaned = String(value||'').replace(/,/g,'').replace(/[^\d.]/g,'').trim();
@@ -658,6 +713,7 @@ function calculate(){
 
   const level = Number(levelRaw);
   const charName = charNameRaw;
+  const computerLabel = getComputerLabel();
 
   // Fix: level up sekarang murni ditentukan oleh toggle eksplisit user,
   // bukan auto-detect dari endExp < startExp (yang sebelumnya rawan salah
@@ -682,7 +738,7 @@ function calculate(){
   const levelText = isLevelUp ? `Lv ${level} → ${level+1}` : `Lv ${level}`;
 
   finalText = `[End Leveling]
-${charName} (${startTime} - ${endTime})
+${computerLabel ? computerLabel + '\n' : ''}${charName} (${startTime} - ${endTime})
 ${levelText}
 Exp ${formatExp(endExp)}%
 Adena ${formatMoney(endAdena)}`;
@@ -710,7 +766,7 @@ Adena ${formatSignedMoney(adenaGain)}`;
   expHourEl.classList.toggle('negative', expPerHour < 0);
 
   $('copyText').value = finalText;
-  $('resName').innerText = charName;
+  $('resName').innerText = computerLabel ? `${charName} • ${computerLabel}` : charName;
   $('resTime').innerText = `${startTime} - ${endTime} • ${formatHours(hours)}`;
 
   const resultEl = $('result');
@@ -741,6 +797,7 @@ function resetAll(){
     if(input.type==='checkbox'){ input.checked=false; }
     else { input.value=''; }
   });
+  $('computer').value='';
   clearErrors();
   finalText='';
   const resultEl = $('result');
